@@ -1,0 +1,29 @@
+@use "sass:math";
+@import "./variables.scss";
+
+// ==== functions HERE ====
+
+@function rem($px) {
+  $result: math.div($px, 16) + rem;
+  @return $result;
+}
+
+// ==== MIXINS HERE ====
+
+//=== colorizers
+@mixin colorizer_lighten($color, $percent) {
+  background: lighten($color, $percent);
+}
+@mixin colorizer_darken($color, $percent) {
+  background: derken($color, $percent);
+}
+
+//=== grids
+
+@mixin display-grid($columns, $rows, $gap) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  grid-template-rows: repeat($rows, 1fr);
+  grid-column-gap: rem($gap);
+  grid-row-gap: rem($gap);
+}

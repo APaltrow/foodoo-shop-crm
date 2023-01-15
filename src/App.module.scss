@@ -1,0 +1,5 @@
+@import "./style/normalize.scss";
+.app {
+  text-align: center;
+  @include normalize;
+}
