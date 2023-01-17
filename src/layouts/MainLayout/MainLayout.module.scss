@@ -1,0 +1,9 @@
+.layout {
+  display: flex;
+}
+
+.content {
+  justify-content: flex-end;
+  flex: 1 0 auto;
+  min-height: 100vh;
+}
