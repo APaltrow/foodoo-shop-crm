@@ -1,18 +1,22 @@
+import { useMemo } from "react";
 import { Routes, Route } from "react-router-dom";
-import { Dashboard } from "../pages/Dashboard/Dashboard";
+import { useAppSelector } from "../hooks/storeHooks";
+
 import { Home } from "../pages/Home/Home";
-import { Orders } from "../pages/Orders/Orders";
-import { Products } from "../pages/Products/Products";
-import { Users } from "../pages/Users/Users";
+import { getUserState } from "../redux/slices/userSlice";
+import { combineRoutes } from "./Routes";
 
 export const AppRouter = () => {
+  const { userRole } = useAppSelector(getUserState);
+
+  const routes = useMemo(() => combineRoutes[userRole], [userRole]);
+
   return (
     <Routes>
       <Route index element={<Home />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/users" element={<Users />} />
-      <Route path="/orders" element={<Orders />} />
-      <Route path="/products" element={<Products />} />
+      {routes.map((elem, idx) => (
+        <Route key={idx} path={elem.path} element={elem.element} />
+      ))}
     </Routes>
   );
 };

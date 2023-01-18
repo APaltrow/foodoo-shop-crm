@@ -1,11 +1,6 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 
-import Typography from "@mui/material/Typography";
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
-import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
-import LunchDiningRoundedIcon from "@mui/icons-material/LunchDiningRounded";
-import PieChartRoundedIcon from "@mui/icons-material/PieChartRounded";
-import ReceiptLongRoundedIcon from "@mui/icons-material/ReceiptLongRounded";
 import {
   Box,
   Button,
@@ -14,6 +9,7 @@ import {
   List,
   ListItem,
   useTheme,
+  Typography,
 } from "@mui/material";
 
 import { tokens } from "../../theme";
@@ -21,6 +17,9 @@ import { tokens } from "../../theme";
 import { Link } from "react-router-dom";
 
 import styles from "./SideBar.module.scss";
+import { useAppSelector } from "../../hooks/storeHooks";
+import { getUserState } from "../../redux/slices/userSlice";
+import { combineNav } from "../../Router/Navigation";
 
 interface SideBarProps {}
 
@@ -34,8 +33,11 @@ const buttonStyle = {
 };
 
 const SideBar: FC<SideBarProps> = () => {
+  const { userRole } = useAppSelector(getUserState);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const navigation = useMemo(() => combineNav[userRole], [userRole]);
+
   return (
     <Drawer
       variant="permanent"
@@ -58,7 +60,9 @@ const SideBar: FC<SideBarProps> = () => {
           width="100%"
         >
           <DashboardRoundedIcon fontSize="large" color="warning" />
-          <Typography variant="h3">FooDoo CRM</Typography>
+          <Typography variant="h3" ml={"10px"}>
+            FooDoo CRM
+          </Typography>
         </Box>
       </Link>
 
@@ -73,61 +77,21 @@ const SideBar: FC<SideBarProps> = () => {
         }}
         component="nav"
       >
-        <ListItem>
-          <Link to="/dashboard">
-            <Button
-              sx={{
-                ...buttonStyle,
-              }}
-              variant="contained"
-              startIcon={<PieChartRoundedIcon color="warning" />}
-            >
-              Dashboard
-            </Button>
-          </Link>
-        </ListItem>
-
-        <ListItem>
-          <Link to="/users">
-            <Button
-              sx={{
-                ...buttonStyle,
-              }}
-              variant="contained"
-              startIcon={<GroupsRoundedIcon color="warning" />}
-            >
-              Users
-            </Button>
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link to="/orders">
-            <Button
-              sx={{
-                ...buttonStyle,
-              }}
-              variant="contained"
-              startIcon={<ReceiptLongRoundedIcon color="warning" />}
-            >
-              Orders
-            </Button>
-          </Link>
-        </ListItem>
-
-        <Divider />
-        <ListItem>
-          <Link to="/products">
-            <Button
-              sx={{
-                ...buttonStyle,
-              }}
-              variant="contained"
-              startIcon={<LunchDiningRoundedIcon color="warning" />}
-            >
-              Products
-            </Button>
-          </Link>
-        </ListItem>
+        {navigation.map((link) => (
+          <ListItem>
+            <Link to={link.route}>
+              <Button
+                variant="contained"
+                startIcon={link.icon}
+                sx={{
+                  ...buttonStyle,
+                }}
+              >
+                {link.name}
+              </Button>
+            </Link>
+          </ListItem>
+        ))}
       </List>
     </Drawer>
   );

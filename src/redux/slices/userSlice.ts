@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { UserRoles } from "../../types/User/User";
 import { RootState } from "../store";
 
 const initialState = {
   mode: "dark",
+  userRole: UserRoles.PRODUCT_OWNER,
 };
 
 export const userSlice = createSlice({
