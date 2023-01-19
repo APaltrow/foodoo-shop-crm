@@ -1,6 +1,17 @@
 import React, { FC } from "react";
 
-import { Box, Divider, IconButton, InputBase, useTheme } from "@mui/material";
+import {
+  Badge,
+  Box,
+  Divider,
+  IconButton,
+  InputBase,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Tooltip,
+  useTheme,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsActiveRoundedIcon from "@mui/icons-material/NotificationsActiveRounded";
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
@@ -14,6 +25,7 @@ import { useAppDispatch } from "../../hooks/storeHooks";
 import { toggleColorMode } from "../../redux/slices/userSlice";
 
 import styles from "./TopBar.module.scss";
+import { Logout } from "@mui/icons-material";
 
 interface TopBarProps {}
 
@@ -25,6 +37,15 @@ const TopBar: FC<TopBarProps> = () => {
 
   const onThemeChange = () => {
     dispatch(toggleColorMode());
+  };
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   return (
@@ -64,25 +85,81 @@ const TopBar: FC<TopBarProps> = () => {
       {/* Toggle icons */}
 
       <Box sx={{ display: "flex", gap: "10px" }}>
-        <IconButton onClick={onThemeChange}>
-          {theme.palette.mode === "dark" ? (
-            <LightModeRoundedIcon />
-          ) : (
-            <DarkModeRoundedIcon />
-          )}
-        </IconButton>
+        <Tooltip title="Color mode">
+          <IconButton onClick={onThemeChange}>
+            {theme.palette.mode === "dark" ? (
+              <LightModeRoundedIcon />
+            ) : (
+              <DarkModeRoundedIcon />
+            )}
+          </IconButton>
+        </Tooltip>
 
-        <IconButton>
-          <NotificationsActiveRoundedIcon />
-        </IconButton>
+        <Tooltip title="Notifications">
+          <IconButton>
+            <Badge badgeContent={5} color="info">
+              <NotificationsActiveRoundedIcon />
+            </Badge>
+          </IconButton>
+        </Tooltip>
 
-        <IconButton>
-          <SettingsSuggestRoundedIcon />
-        </IconButton>
+        <Tooltip title="Settings">
+          <IconButton>
+            <SettingsSuggestRoundedIcon />
+          </IconButton>
+        </Tooltip>
 
-        <IconButton>
-          <PersonRoundedIcon />
-        </IconButton>
+        <Tooltip title="Profile">
+          <IconButton onClick={handleClick}>
+            <PersonRoundedIcon />
+          </IconButton>
+        </Tooltip>
+
+        <Menu
+          anchorEl={anchorEl}
+          id="account-menu"
+          open={open}
+          onClose={handleClose}
+          onClick={handleClose}
+          PaperProps={{
+            elevation: 0,
+            sx: {
+              overflow: "visible",
+              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+              mt: 3,
+              "& .MuiAvatar-root": {
+                width: 32,
+                height: 32,
+              },
+              "&:before": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: "background.paper",
+                transform: "translateY(-50%) rotate(45deg)",
+                zIndex: 0,
+              },
+            },
+          }}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        >
+          <MenuItem>Switch to Content Manager</MenuItem>
+          <MenuItem>Switch to Delivery</MenuItem>
+
+          <Divider />
+
+          <MenuItem>
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            Logout
+          </MenuItem>
+        </Menu>
       </Box>
     </Box>
   );

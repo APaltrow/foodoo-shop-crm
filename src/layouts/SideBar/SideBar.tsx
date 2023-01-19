@@ -1,99 +1,124 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, useMemo, useState } from "react";
 
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+
 import {
   Box,
-  Button,
   Divider,
   Drawer,
   List,
   ListItem,
   useTheme,
   Typography,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  IconButton,
 } from "@mui/material";
 
 import { tokens } from "../../theme";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import styles from "./SideBar.module.scss";
+import style from "./SideBar.module.scss";
 import { useAppSelector } from "../../hooks/storeHooks";
 import { getUserState } from "../../redux/slices/userSlice";
 import { combineNav } from "../../Router/Navigation";
 
 interface SideBarProps {}
 
-const buttonStyle = {
-  width: 180,
-  paddingLeft: "30px",
-  display: "flex",
-  justifyContent: "flex-start",
-  alignItems: "center",
-  gap: "10px",
-};
-
 const SideBar: FC<SideBarProps> = () => {
   const { userRole } = useAppSelector(getUserState);
+  const [isOpened, setOpened] = useState(true);
+
+  const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const navigation = useMemo(() => combineNav[userRole], [userRole]);
 
   return (
-    <Drawer
-      variant="permanent"
-      anchor="left"
-      sx={{
-        backgroundColor: `${colors.primary[400]}`,
-        height: "100%",
-        width: 200,
-      }}
-    >
-      {/* Menu Header */}
+    <div className={isOpened ? style.bar : style.bar_closed}>
+      <Drawer
+        variant="permanent"
+        anchor="left"
+        sx={{
+          height: "100%",
+          width: "100%",
+          "& 	.MuiDrawer-paper": {
+            width: isOpened ? "200px" : "100px",
+          },
+        }}
+      >
+        {/* Menu Header */}
 
-      <Link to="/">
         <Box
-          display="flex"
-          mb="7px"
-          p={2}
-          gap="10"
-          alignItems="flex-end"
-          width="100%"
+          onClick={() => navigate("/")}
+          sx={{
+            cursor: "pointer",
+            width: "100%",
+            height: "69px",
+
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
           <DashboardRoundedIcon fontSize="large" color="warning" />
-          <Typography variant="h3" ml={"10px"}>
-            FooDoo CRM
-          </Typography>
+
+          {isOpened && (
+            <Typography variant="h3" ml={"10px"}>
+              FooDoo CRM
+            </Typography>
+          )}
         </Box>
-      </Link>
 
-      <Divider />
+        <Divider />
 
-      {/* Menu List */}
+        {/* Menu List */}
 
-      <List
-        sx={{
-          width: 200,
-          bgcolor: "background.paper",
-        }}
-        component="nav"
-      >
-        {navigation.map((link) => (
-          <ListItem>
-            <Link to={link.route}>
-              <Button
-                variant="contained"
-                startIcon={link.icon}
+        <List component="nav">
+          {navigation.map((link) => (
+            <ListItem key={link.name} sx={{ padding: "0px 5px" }}>
+              <ListItemButton
+                onClick={() => navigate(link.route)}
                 sx={{
-                  ...buttonStyle,
+                  minHeight: 48,
+                  justifyContent: "initial",
                 }}
               >
-                {link.name}
-              </Button>
-            </Link>
-          </ListItem>
-        ))}
-      </List>
-    </Drawer>
+                <ListItemIcon
+                  sx={{
+                    justifyContent: "center",
+                  }}
+                >
+                  {link.icon}
+                </ListItemIcon>
+
+                <ListItemText
+                  primary={link.name}
+                  sx={{ opacity: isOpened ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+
+        <IconButton
+          onClick={() => setOpened((prev) => !prev)}
+          sx={{
+            width: 40,
+            height: 40,
+            position: "absolute",
+            top: "50%",
+            right: 0,
+          }}
+        >
+          {isOpened ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+        </IconButton>
+      </Drawer>
+    </div>
   );
 };
 
