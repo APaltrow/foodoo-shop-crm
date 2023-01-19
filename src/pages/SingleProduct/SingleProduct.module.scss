@@ -1,1 +1,19 @@
-.SingleProduct {}
+.singleProduct {
+}
+.info_top {
+  display: flex;
+}
+.info_description {
+  flex: 1;
+}
+.info_photo {
+  width: 40vw;
+  height: 25vw;
+  background-color: lightgray;
+  border-radius: 5px;
+  opacity: 0.7;
+  margin: 0px 20px;
+}
+
+.info_bot {
+}
