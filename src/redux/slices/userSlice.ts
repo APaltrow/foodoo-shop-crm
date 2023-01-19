@@ -18,11 +18,14 @@ export const userSlice = createSlice({
         state.mode = "dark";
       }
     },
+    setUserRole: (state, action) => {
+      state.userRole = action.payload;
+    },
   },
 });
 
 export const getUserState = (state: RootState) => state.user;
 
-export const { toggleColorMode } = userSlice.actions;
+export const { toggleColorMode, setUserRole } = userSlice.actions;
 
 export default userSlice.reducer;

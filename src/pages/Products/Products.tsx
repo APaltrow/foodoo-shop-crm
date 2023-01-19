@@ -9,6 +9,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 
@@ -86,27 +87,28 @@ export const Products: FC<ProductsProps> = () => {
           </Table>
         </TableContainer>
       </Paper>
-
-      <IconButton
-        onClick={() => navigate(`${RoutesList.PRODUCTS}/new`)}
-        color="warning"
-        size="large"
-        component="div"
-        sx={{
-          position: "fixed",
-          right: 50,
-          bottom: 20,
-          width: 80,
-          height: 80,
-        }}
-      >
-        <AddCircleRoundedIcon
+      <Tooltip title="Create Product">
+        <IconButton
+          onClick={() => navigate(`${RoutesList.PRODUCTS}/new`)}
+          color="warning"
+          size="large"
+          component="div"
           sx={{
-            width: 50,
-            height: 50,
+            position: "fixed",
+            right: 50,
+            bottom: 20,
+            width: 80,
+            height: 80,
           }}
-        />
-      </IconButton>
+        >
+          <AddCircleRoundedIcon
+            sx={{
+              width: 50,
+              height: 50,
+            }}
+          />
+        </IconButton>
+      </Tooltip>
     </div>
   );
 };

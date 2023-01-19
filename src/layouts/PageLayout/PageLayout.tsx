@@ -1,7 +1,9 @@
-import { Divider, Typography } from "@mui/material";
 import React, { FC, useMemo } from "react";
+
 import { useLocation } from "react-router-dom";
 import { titleFormatter } from "../../utils/titleFormatter";
+
+import { Divider, Typography } from "@mui/material";
 
 import styles from "./PageLayout.module.scss";
 
